@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private int count;
     private float movementX;
     private float movementY;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +36,7 @@ public class PlayerController : MonoBehaviour
         countText.text = "Count:" + count.ToString();
         if(count >= 14) {
             winTextObject.SetActive(true);
+            Destroy(GameObject.FindGameObjectWithTag("Enemy"));
         }
     }
 
@@ -42,9 +44,23 @@ public class PlayerController : MonoBehaviour
    {
     Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
     rb.AddForce(movement * speed); 
-
-
    }
+
+    private void OnCollisionEnter(Collision collision)
+{
+   
+   if (collision.gameObject.CompareTag("Enemy"))
+   {
+       // Destroy the current object
+       Destroy(gameObject); 
+       // Update the winText to display "You Lose!"
+       winTextObject.gameObject.SetActive(true);
+       winTextObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
+   }
+}
+
+
+   
     void OnTriggerEnter(Collider other) 
    {
     if(other.gameObject.CompareTag("Pickup"))
